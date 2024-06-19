@@ -39,7 +39,7 @@ This project is a backend service for an outfit recommendation tool. The service
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-username/outfit-recommendation.git
+    git clone https://github.com/kushvaharavi/outfit-recommendation.git
     cd outfit-recommendation
     ```
 
