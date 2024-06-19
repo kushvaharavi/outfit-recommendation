@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller for handling recommendation requests.
+ */
 @RestController
 @RequestMapping("/recommendations")
 public class RecommendationController {
@@ -24,6 +27,12 @@ public class RecommendationController {
         this.recommendationService = recommendationService;
     }
 
+    /**
+     * Endpoint to get recommendations based on user preferences.
+     *
+     * @param userInput the user preferences
+     * @return a list of recommendations
+     */
     @Operation(summary = "Get outfit recommendations")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the recommendations",
@@ -36,7 +45,7 @@ public class RecommendationController {
 
     @PostMapping
     public ResponseEntity<List<Recommendation>> getRecommendations(
-            @Valid @RequestBody UserInput userInput) {
+            @Valid @RequestBody final UserInput userInput) {
         List<Recommendation> recommendations = recommendationService.generateRecommendations(userInput);
         return ResponseEntity.ok(recommendations);
     }

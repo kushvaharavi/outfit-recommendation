@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Service for managing the inventory of items.
+ */
 @Service
 public class InventoryService {
 
@@ -48,12 +49,24 @@ public class InventoryService {
         addItem(new InventoryItem(25, "Tie", Style.FORMAL, 200, 15, EventType.WEDDING, Category.ACCESSORY));
     }
 
+    /**
+     * Adds an item to the inventory.
+     *
+     * @param item the item to add
+     */
     private void addItem(InventoryItem item) {
         inventory.add(item);
     }
 
-    public List<InventoryItem> filterInventory(UserInput userInput) {
-        List<InventoryItem> filteredItems = inventory.stream()
+    /**
+     * Filters the inventory based on user input.
+     *
+     * @param userInput the user input
+     * @return a list of filtered inventory items
+     * @throws InventoryException if no items match the criteria
+     */
+    public List<InventoryItem> filterInventory(final UserInput userInput) {
+        var filteredItems = inventory.stream()
                 .filter(item -> item.eventType().name().equalsIgnoreCase(userInput.eventType())
                         && item.style().name().equalsIgnoreCase(userInput.style())
                         && item.price() <= userInput.budget()
@@ -67,16 +80,24 @@ public class InventoryService {
         return recommendFullOutfit(filteredItems, userInput.budget());
     }
 
-    List<InventoryItem> recommendFullOutfit(List<InventoryItem> items, double budget) {
-        Map<Category, List<InventoryItem>> itemsByCategory = items.stream()
+    /**
+     * Recommends a full outfit based on filtered items and budget.
+     *
+     * @param items  the filtered items
+     * @param budget the budget
+     * @return a list of inventory items for a full outfit
+     * @throws InventoryException if a full outfit cannot be recommended within the budget
+     */
+    List<InventoryItem> recommendFullOutfit(final List<InventoryItem> items, final double budget) {
+        var itemsByCategory = items.stream()
                 .collect(Collectors.groupingBy(InventoryItem::category));
 
-        List<InventoryItem> fullOutfit = new ArrayList<>();
-        double totalCost = 0;
+        var fullOutfit = new ArrayList<InventoryItem>();
+        var totalCost = 0.0;
 
         for (Category category : Category.values()) {
-            double finalTotalCost = totalCost;
-            Optional<InventoryItem> selectedItem = itemsByCategory.getOrDefault(category, List.of()).stream()
+            var finalTotalCost = totalCost;
+            var selectedItem = itemsByCategory.getOrDefault(category, List.of()).stream()
                     .filter(item -> finalTotalCost + item.price() <= budget)
                     .findFirst();
 
